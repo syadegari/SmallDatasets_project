@@ -1,0 +1,70 @@
+* Try the same with VQ-VAE
+* Some course summaries
+- wide tabular data or long tabular data
+- 
+
+* Training for transfer learning
+Given that only a few hundred data points are available across 3 categories, the solution tends to be in favor of transfer learning. A Pretrained networks such as a flavor of VGG or Resnet models work best for such a
+
+Each class has 50 images and is balanced.
+
+Another case against synthetic data generation is that creating a network that can generate similar images based on 150 images is not feasible due to high dimensional nature of pictures.
+
+Use VGG16 as baseline
+Use Resnet and efficient net for comparison
+Use ensemeble learning of all 3 models
+Compare timing of the following cases for inference
+- Resnet
+- EfficientNet
+- VGG16
+- EnsembleModel
+
+Dataset
+- Visualize some of the pictures
+- See if there is class imbalance
+- Create, train, test and validation
+
+Coding
+- Less code in notebook, more in py-files
+- Install via pip
+- Training and testing is stream lined
+- Reproducible
+
+Training Implementation
+- If possible, via lightning
+
+* Training of the synthetic data generation
+- Use a baseline for comparison (SMOTE). Here is a sample code
+#+BEGIN_SRC python
+from imblearn.over_sampling import SMOTE
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from collections import Counter
+
+# Generate a synthetic dataset for demonstration
+X, y = make_classification(n_classes=2, class_sep=2,
+                        weights=[0.1, 0.9], n_informative=3, n_redundant=1, flip_y=0,
+                        n_features=20, n_clusters_per_class=1, n_samples=1000, random_state=10)
+
+# Splitting the dataset into training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+# Summarize class distribution
+print("Before SMOTE: ", Counter(y_train))
+
+# Define SMOTE
+smote = SMOTE(sampling_strategy='auto', random_state=42)
+
+# Apply SMOTE to generate synthetic data for balancing
+X_res, y_res = smote.fit_resample(X_train, y_train)
+
+# Summarize class distribution after SMOTE
+print("After SMOTE: ", Counter(y_res))
+#+END_SRC
+
+- Use TSNe and other projection methods to compare the mapped quantities into lower dimension and see if synthetic and real data match (baseline, real data and VAE)
+
+* Some links for implementation
+ - Karpathy VQ-VAE https://github.com/karpathy/deep-vector-quantization
+ - VQ-VAE papers with code https://paperswithcode.com/paper/neural-discrete-representation-learning#code
+ - VAE pytorch lightning https://github.com/williamFalcon/pytorch-lightning-vae/blob/main/vae.py
