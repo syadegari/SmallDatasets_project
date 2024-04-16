@@ -1,0 +1,5 @@
+tboard
+saved_models
+lightning_logs
+.ipynb_checkpoints
+__pycache__
